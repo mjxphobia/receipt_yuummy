@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>이미지 갤러리</title>
+  <style>
+    /* 모바일 친화 기본 세팅 */
+    html,body{margin:0;padding:0;background:#fff;color:#111;}
+    body{font-family:system-ui,"Noto Sans KR",sans-serif;}
+    .wrap{max-width:900px;margin:0 auto;padding:16px;}
+    /* 이미지는 가로폭에 맞추고 비율 유지 */
+    .block{
+      margin:0 auto 16px;
+      border-radius:12px;           /* 필요 없으면 지워도 됨 */
+      overflow:hidden;
+      box-shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    .block img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+    /* 아주 작은 화면에서 여백 살짝 */
+    @media (max-width:480px){ .wrap{padding:12px;} .block{margin-bottom:12px;} }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <!-- ▼ 여기 파일명만 바꾸면 됩니다 -->
+    <figure class="block">
+      <img src="static/yuummy1.png" alt="이미지 1" loading="lazy" />
+    </figure>
+
+    <figure class="block">
+      <img src="static/yuummy2.png" alt="이미지 2" loading="lazy" />
+    </figure>
+
+    <figure class="block">
+      <img src="static/yuummy3.png" alt="이미지 3" loading="lazy" />
+    </figure>
+  </main>
+</body>
+</html>
