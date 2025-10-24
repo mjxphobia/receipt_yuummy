@@ -3,42 +3,131 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>이미지 갤러리</title>
+  <title>영수증 확인 서비스</title>
   <style>
-    /* 모바일 친화 기본 세팅 */
+    /* 모바일 기본 */
     html,body{margin:0;padding:0;background:#fff;color:#111;}
     body{font-family:system-ui,"Noto Sans KR",sans-serif;}
     .wrap{max-width:900px;margin:0 auto;padding:16px;}
-    /* 이미지는 가로폭에 맞추고 비율 유지 */
-    .block{
-      margin:0 auto 16px;
-      border-radius:12px;           /* 필요 없으면 지워도 됨 */
-      overflow:hidden;
-      box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+    /* 카드 공통 */
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    .section{padding:18px 16px;text-align:center}
+
+    /* 제목/문구 */
+    .title{margin:6px 0 8px;font-size:22px;font-weight:800}
+    .subtitle{margin:0 0 14px;color:#444}
+    .help{margin:8px 0 10px;font-weight:700}
+    .hint{color:#666;font-size:13px}
+
+    /* 이미지 */
+    .hero{display:flex;justify-content:center;align-items:center;background:#fff;padding:8px 12px}
+    .hero img{display:block;width:100%;max-width:560px;height:auto;border-radius:12px}
+
+    /* 입력영역 */
+    .input-row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .input-row input{
+      flex:1 1 280px;max-width:420px;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:16px
     }
-    .block img{
-      display:block;
-      width:100%;
-      height:auto;
+    .btn{
+      display:inline-block;padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:800;
+      background:#F5A623;color:#111;border:1.5px solid #000;box-shadow:0 1px 0 rgba(0,0,0,.35) inset;transition:.06s;cursor:pointer
     }
-    /* 아주 작은 화면에서 여백 살짝 */
-    @media (max-width:480px){ .wrap{padding:12px;} .block{margin-bottom:12px;} }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    .btn:active{transform:translateY(0);filter:brightness(.98)}
+
+    .error{color:#dc2626;margin-top:10px;font-weight:700;min-height:1.2em}
+
+    /* 갤러리 */
+    .block{margin:0 auto 16px;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    .block img{display:block;width:100%;height:auto}
+
+    /* 숨김 제어 */
+    [hidden]{display:none !important}
+
+    @media (max-width:480px){ .wrap{padding:12px} .title{font-size:20px} }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <!-- ▼ 여기 파일명만 바꾸면 됩니다 -->
-    <figure class="block">
-      <img src="static/yuummy1.png" alt="이미지 1" loading="lazy" />
-    </figure>
+    <div class="card">
+      <!-- ===== 첫 페이지: 영수증 확인 서비스 ===== -->
+      <section id="page-intro" class="section">
+        <h1 class="title"></h1>
+        <p class="subtitle"></p>
+        <div class="help"></div>
 
-    <figure class="block">
-      <img src="static/yuummy2.png" alt="이미지 2" loading="lazy" />
-    </figure>
+        <div class="hero">
+          <img src="static/mirror.png" alt="제품명 확인 안내 이미지(거울)">
+        </div>
 
-    <figure class="block">
-      <img src="static/yuummy3.png" alt="이미지 3" loading="lazy" />
-    </figure>
+        <form id="check-form" class="input-row" autocomplete="off">
+          <input id="answer" type="text" placeholder="??????" required />
+          <button class="btn" type="submit">확인</button>
+        </form>
+        <div id="error" class="error"></div>
+        <div class="hint">정답: 영어 <strong></strong></div>
+      </section>
+
+      <!-- ===== 두 번째 페이지: 영수증(이미지 3장) 갤러리 ===== -->
+      <section id="page-gallery" class="section" hidden>
+        <h2 class="title" style="margin-top:4px;">영수증 확인 결과</h2>
+        <p class="subtitle">업로드된 영수증 이미지를 확인하세요.</p>
+
+        <figure class="block">
+          <img src="static/yuummy1.png" alt="이미지 1" loading="lazy" />
+        </figure>
+        <figure class="block">
+          <img src="static/yuummy2.png" alt="이미지 2" loading="lazy" />
+        </figure>
+        <figure class="block">
+          <img src="static/yuummy3.png" alt="이미지 3" loading="lazy" />
+        </figure>
+
+        <div style="margin-top:8px;">
+          <button class="btn" id="back-btn" type="button">처음으로</button>
+        </div>
+      </section>
+    </div>
   </main>
+
+  <script>
+    const form = document.getElementById('check-form');
+    const input = document.getElementById('answer');
+    const err   = document.getElementById('error');
+    const pIntro = document.getElementById('page-intro');
+    const pGallery = document.getElementById('page-gallery');
+    const backBtn = document.getElementById('back-btn');
+
+    function gotoGallery(){
+      pIntro.hidden = true;
+      pGallery.hidden = false;
+      err.textContent = '';
+      // 필요하면 입력값 유지/초기화 선택
+      // input.value = '';
+      window.scrollTo({top:0, behavior:'instant'});
+    }
+    function gotoIntro(){
+      pGallery.hidden = true;
+      pIntro.hidden = false;
+      window.scrollTo({top:0, behavior:'instant'});
+      input.focus();
+    }
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const v = (input.value || '').trim().toLowerCase();
+      if (v === 'yummy') {
+        gotoGallery();
+      } else {
+        err.textContent = '오답입니다. 제품명을 다시 확인해 주세요.';
+      }
+    });
+
+    backBtn.addEventListener('click', gotoIntro);
+
+    // 접근성: 로드 시 입력 포커스
+    window.addEventListener('load', ()=> input.focus());
+  </script>
 </body>
 </html>
